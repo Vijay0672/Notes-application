@@ -149,27 +149,48 @@ export const updateNotePinned = async (req, res, next) => {
 
 
 export const searchNote = async (req, res, next) => {
-  const { query } = req.query
-
-  if (!query) {
-    return next(errorHandler(400, "Search query is required"))
-  }
-
   try {
-    const matchingNotes = await Note.find({
-      userId: req.user.id,
-      $or: [
-        { title: { $regex: new RegExp(query, "i") } },
-        { content: { $regex: new RegExp(query, "i") } },
-      ],
-    })
+    const { query } = req.query;
+    const userId = req.user?.id;
 
-    res.status(200).json({
+    console.log("🔍 Search query:", query);
+    console.log("👤 User ID:", userId);
+
+    if (!userId) {
+      return next(errorHandler(401, "Unauthorized user! Please log in again."));
+    }
+
+    if (!query || query.trim() === "") {
+      return next(errorHandler(400, "Search query is required"));
+    }
+
+    // Use case-insensitive regex ($options: "i") to match titles, content, or tags
+    const matchingNotes = await Note.find({
+      userId: userId,
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { content: { $regex: query, $options: "i" } },
+        { tags: { $regex: query, $options: "i" } },
+      ],
+    }).sort({ isPinned: -1, createdAt: -1 }); // optional sorting
+
+    console.log(`📄 Found ${matchingNotes.length} matching notes`);
+
+    if (matchingNotes.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No notes found matching your search.",
+        notes: [],
+      });
+    }
+
+    return res.status(200).json({
       success: true,
-      message: "Notes matching the search query retrieved successfully",
+      message: "Notes matching your search retrieved successfully",
       notes: matchingNotes,
-    })
+    });
   } catch (error) {
-    next(error)
+    console.error("❌ Error while searching notes:", error.message);
+    next(error);
   }
-}
+};
