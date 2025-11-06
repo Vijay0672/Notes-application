@@ -35,7 +35,7 @@ export const addNote = async (req, res, next) => {
 }
 
 export const editNote = async (req, res, next) => {
-  const note = await Note.findById(req.params.noteId)
+  const note = await Note.findById(req.params.id)
 
   if (!note) {
     return next(errorHandler(404, "Note not found"))
@@ -97,53 +97,56 @@ export const getAllNotes = async (req, res, next) => {
 }
 
 export const deleteNote = async (req, res, next) => {
-  const noteId = req.params.noteId
+  const noteId = req.params.id; // ✅ fixed
 
-  const note = await Note.findOne({ _id: noteId, userId: req.user.id })
+  const note = await Note.findOne({ _id: noteId, userId: req.user.id });
 
   if (!note) {
-    return next(errorHandler(404, "Note not found"))
+    return next(errorHandler(404, "Note not found"));
   }
 
   try {
-    await Note.deleteOne({ _id: noteId, userId: req.user.id })
+    await Note.deleteOne({ _id: noteId, userId: req.user.id });
 
     res.status(200).json({
       success: true,
       message: "Note deleted successfully",
-    })
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+
 
 export const updateNotePinned = async (req, res, next) => {
   try {
-    const note = await Note.findById(req.params.noteId)
+    const noteId = req.params.id; // ✅ fixed
+    const note = await Note.findById(noteId);
 
     if (!note) {
-      return next(errorHandler(404, "Note not found!"))
+      return next(errorHandler(404, "Note not found!"));
     }
 
-    if (req.user.id !== note.userId) {
-      return next(errorHandler(401, "You can only update your own note!"))
+    if (req.user.id !== note.userId.toString()) {
+      // note.userId might be ObjectId — convert to string
+      return next(errorHandler(401, "You can only update your own note!"));
     }
 
-    const { isPinned } = req.body
+    const { isPinned } = req.body;
+    note.isPinned = isPinned;
 
-    note.isPinned = isPinned
-
-    await note.save()
+    await note.save();
 
     res.status(200).json({
       success: true,
-      message: "Note updated successfully",
+      message: "Pin status updated successfully",
       note,
-    })
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+
 
 export const searchNote = async (req, res, next) => {
   const { query } = req.query
