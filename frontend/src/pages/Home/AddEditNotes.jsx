@@ -3,7 +3,6 @@ import { MdClose } from "react-icons/md"
 import TagInput from "../../components/Input/TagInput "
 import axios from "axios"
 import { toast } from "react-toastify"
-import API_BASE_URL from "../../config/api"
 
 const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
   const [title, setTitle] = useState(noteData?.title || "")
@@ -18,7 +17,7 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
 
     try {
       const res = await axios.post(
-        `${API_BASE_URL}/api/note/edit/` + noteId,
+        "http://localhost:3000/api/note/edit/" + noteId,
         { title, content, tags },
         { withCredentials: true }
       )
@@ -51,7 +50,7 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
   const addNewNote = async () => {
     try {
       const res = await axios.post(
-        `${API_BASE_URL}/api/note/add`,
+        "http://localhost:3000/api/note/add",
         { title, content, tags },
         { withCredentials: true }
       )

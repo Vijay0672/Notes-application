@@ -20,28 +20,11 @@ const app = express()
 // to make input as json
 app.use(express.json())
 app.use(cookieParser())
-const allowedOrigins = [
-  "http://localhost:5173",
-  process.env.FRONTEND_URL,
-].filter(Boolean)
+app.use(cors({ origin: ["http://localhost:5173"], credentials: true }))
 
-app.use(
-  cors({
-    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
-    credentials: true,
-  })
-)
-
-// For Vercel serverless functions
-export default app
-
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 3000
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
-  })
-}
+app.listen(3000, () => {
+  console.log("Server is running on port 3000")
+})
 
 // import routes
 import authRouter from "./routes/auth.route.js"
