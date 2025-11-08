@@ -46,14 +46,8 @@ const Navbar = ({ userInfo, onSearchNote, handleClearSearch }) => {
       dispatch(signInSuccess())
       navigate("/login")
     } catch (error) {
-      // If 401, user is already logged out or session expired
-      if (error.response?.status === 401) {
-        dispatch(signInSuccess())
-        navigate("/login")
-      } else {
-        toast.error(error.message)
-        dispatch(signoutFailure(error.message))
-      }
+      toast.error(error.message)
+      dispatch(signoutFailure(error.message))
     }
   }
 

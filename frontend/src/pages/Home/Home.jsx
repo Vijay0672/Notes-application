@@ -55,13 +55,7 @@ const Home = () => {
 
       setAllNotes(res.data.notes)
     } catch (error) {
-      if (error.response?.status === 401) {
-        // Unauthorized - token expired or invalid
-        toast.error("Session expired. Please login again.")
-        navigate("/login")
-      } else {
-        console.log(error)
-      }
+      console.log(error)
     }
   }
 
@@ -87,12 +81,7 @@ const Home = () => {
       toast.success(res.data.message)
       getAllNotes()
     } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("Session expired. Please login again.")
-        navigate("/login")
-      } else {
-        toast.error(error.message)
-      }
+      toast(error.message)
     }
   }
 
@@ -112,12 +101,7 @@ const Home = () => {
       setIsSearch(true)
       setAllNotes(res.data.notes)
     } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("Session expired. Please login again.")
-        navigate("/login")
-      } else {
-        toast.error(error.message)
-      }
+      toast.error(error.message)
     }
   }
 
@@ -145,12 +129,7 @@ const Home = () => {
       toast.success(res.data.message)
       getAllNotes()
     } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("Session expired. Please login again.")
-        navigate("/login")
-      } else {
-        console.log(error.message)
-      }
+      console.log(error.message)
     }
   }
 
