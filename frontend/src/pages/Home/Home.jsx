@@ -56,7 +56,13 @@ const Home = () => {
 
       setAllNotes(res.data.notes)
     } catch (error) {
-      console.log(error)
+      if (error.response?.status === 401) {
+        // Unauthorized - redirect to login
+        toast.error("Session expired. Please login again.")
+        navigate("/login")
+      } else {
+        console.log(error)
+      }
     }
   }
 
@@ -82,7 +88,12 @@ const Home = () => {
       toast.success(res.data.message)
       getAllNotes()
     } catch (error) {
-      toast(error.message)
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.")
+        navigate("/login")
+      } else {
+        toast.error(error.message)
+      }
     }
   }
 
@@ -102,7 +113,12 @@ const Home = () => {
       setIsSearch(true)
       setAllNotes(res.data.notes)
     } catch (error) {
-      toast.error(error.message)
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.")
+        navigate("/login")
+      } else {
+        toast.error(error.message)
+      }
     }
   }
 
@@ -130,7 +146,12 @@ const Home = () => {
       toast.success(res.data.message)
       getAllNotes()
     } catch (error) {
-      console.log(error.message)
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.")
+        navigate("/login")
+      } else {
+        console.log(error.message)
+      }
     }
   }
 

@@ -33,15 +33,10 @@ app.use(
     credentials: true,
   })
 )
+
+// Health check route
 app.get("/", (req, res) => {
-  res.send("✅ Notes Backend is Live on Render!");
-});
-
-// Use PORT from environment variable (Render provides this) or default to 3000
-const PORT = process.env.PORT || 3000
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
+  res.send("✅ Notes Backend is Live on Render!")
 })
 
 // import routes
@@ -51,7 +46,7 @@ import noteRouter from "./routes/note.route.js"
 app.use("/api/auth", authRouter)
 app.use("/api/note", noteRouter)
 
-// error handling
+// error handling (must be after all routes)
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
   const message = err.message || "Internal Serer Error"
@@ -61,4 +56,11 @@ app.use((err, req, res, next) => {
     statusCode,
     message,
   })
+})
+
+// Use PORT from environment variable (Render provides this) or default to 3000
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
 })

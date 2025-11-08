@@ -36,9 +36,14 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
       getAllNotes()
       onClose()
     } catch (error) {
-      toast.error(error.message)
-      console.log(error.message)
-      setError(error.message)
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.")
+        setError("Session expired. Please login again.")
+      } else {
+        toast.error(error.message)
+        console.log(error.message)
+        setError(error.message)
+      }
     }
   }
 
@@ -63,9 +68,14 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
       getAllNotes()
       onClose()
     } catch (error) {
-      toast.error(error.message)
-      console.log(error.message)
-      setError(error.message)
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Please login again.")
+        setError("Session expired. Please login again.")
+      } else {
+        toast.error(error.message)
+        console.log(error.message)
+        setError(error.message)
+      }
     }
   }
 
