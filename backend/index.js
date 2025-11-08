@@ -20,10 +20,25 @@ const app = express()
 // to make input as json
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({ origin: ["http://localhost:5173"], credentials: true }))
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000")
+// CORS configuration - allows localhost in development and production URL from env
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL,
+].filter(Boolean)
+
+app.use(
+  cors({
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+    credentials: true,
+  })
+)
+
+// Use PORT from environment variable (Render provides this) or default to 3000
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
 })
 
 // import routes

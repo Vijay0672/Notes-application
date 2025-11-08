@@ -10,6 +10,7 @@ import {
 } from "../../redux/user/userSlice"
 import axios from "axios"
 import { toast } from "react-toastify"
+import API_BASE_URL from "../../config/api"
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -40,7 +41,7 @@ const Login = () => {
       dispatch(signInStart())
 
       const res = await axios.post(
-        "http://localhost:3000/api/auth/signin",
+        `${API_BASE_URL}/api/auth/signin`,
         { email, password },
         { withCredentials: true }
       )
