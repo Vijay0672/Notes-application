@@ -52,7 +52,14 @@ export const signin = async (req, res, next) => {
 
     const { password: pass, ...rest } = validUser._doc
 
-    res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+    const isProduction = process.env.NODE_ENV === "production"
+
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "Lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    }).status(200).json({
       success: true,
       message: "Login Successful!",
       rest,
@@ -64,7 +71,13 @@ export const signin = async (req, res, next) => {
 
 export const signout = async (req, res, next) => {
   try {
-    res.clearCookie("access_token")
+    const isProduction = process.env.NODE_ENV === "production"
+
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "Lax",
+    })
 
     res.status(200).json({
       success: true,
